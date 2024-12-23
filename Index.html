@@ -1,343 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IoT Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      font-family: 'Roboto', sans-serif;
-      color: #333;
-    }
-    .card {
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .card h5 {
-      font-weight: bold;
-    }
-    .btn-custom {
-      background: linear-gradient(to right, #667eea, #764ba2);
-      color: white;
-      font-weight: bold;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 50px;
-      transition: all 0.3s ease;
-    }
-    .btn-custom:hover {
-      background: linear-gradient(to right, #764ba2, #667eea);
-    }
-    .chart-container {
-      height: 300px;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #4facfe;
-      color: white;
-      border-top: 3px solid #00f2fe;
-    }
-    #liveDataContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Ensure items are left-aligned */
-    padding: 10px; /* Add padding inside the container */
-    line-height: 1.5; /* Improve line height for readability */
-  }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Dashboard with Live Graph</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* Sidebar style */
+        .sidebar {
+            height: 200%;
+            width: 300px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #2c3e50;
+            color: white;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .sidebar a:hover {
+            background-color: #1abc9c;
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        /* Dashboard header */
+        .header {
+            background-color: #34495e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Cards for dashboard sections */
+        .card {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: 30%;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .card h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .card p {
+            color: #95a5a6;
+        }
+
+        /* Graph area */
+        .graph-container {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Responsive design for smaller screens */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+            }
+
+            .card {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <header class="bg-dark text-white py-3 text-center">
-    <h1>IoT Dashboard</h1>
-    <p>Monitor and Control Your IoT Devices Seamlessly</p>
-  </header>
 
-  <div class="container mt-4">
-    <div class="row g-4">
-      <!-- temperature section -->
-      <div class="col-md-4">
-        <div class="card text-center p-3">
-            <h5>Temperature</h5>
-            <div id="Temperature" class="mt-3">
-              <!-- Dynamic content will be added here -->
-            </div>            
-        </div>
-      </div>
+   
 
-      <!-- Device Control Section -->
-      <div class="col-md-4">
-        <div class="card text-center p-3">
-          <h5>Device Control</h5>
-          <div class="d-grid gap-1 mt-3">
-            <button class="btn btn-custom" onclick="toggleDevice('1')">Toggle Device1</button>
-            <button class="btn btn-custom" onclick="toggleDevice('2')">Toggle Device2</button>
-            <button class="btn btn-custom" onclick="toggleDevice('3')">Toggle Device3</button>
-          </div>
+    <!-- Main content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>IOT Dashboard</h1>
         </div>
-      </div>
 
-      <!-- Alerts Section -->
-      <div class="col-md-4">
-        <div class="card text-center p-3">
-          <h5>Alerts</h5>
-          <div class="alerts-container mt-3">
-            <!-- Dynamic alerts will be added here -->
-          </div>
+        <div class="card">
+            <h3>Temperature</h3>
+
+        
         </div>
-      </div>
+
+        <div class="card">
+            <h3>spo2</h3>
+            
+            
+        </div>
+
+        <div class="card">
+            <h3>Weight</h3>
+        
+            
+        </div>
+
+        <!-- Graph container -->
+        <div class="graph-container">
+            <h3>live graph</h3>
+            <canvas id="trafficChart" width="400" height="200"></canvas>
+        </div>
     </div>
 
-    <!-- Live Graph Section -->
-    <div class="row mt-4">
-      <div id="dynamicCharts" class="col-12">
-        <div class="card p-3">
-          <h5 class="text-center">Live Graphs</h5>
-          <div id="chartsContainer"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    &copy; 2024 IoT Dashboard. Built for smarter living.
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    async function toggleDevice(deviceId) {
-        try {
-            const response = await fetch('https://pcod.onrender.com/toggle-device', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ device_id: deviceId })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-            alert(`Device ${deviceId} is now ${data.state}`);
-            } else {
-            alert(`Error: ${data.error}`);
+    <script>
+        // Data for the live graph (simulating with random data for now)
+        const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+        const data = {
+            labels: labels,
+            datasets: {
+                label: 'live graph',
+                data:(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
+             
+                
             }
-        } catch (error) {
-            console.error('Error toggling device:', error);
-        }
-        }
+        };
 
-  </script>
-  <script>
-    async function updateAlerts() {
-      try {
-          const response = await fetch('https://pcod.onrender.com/get-alerts'); // Fetch alerts from the API
-          const alerts = await response.json(); // Example: [{"type": "warning", "message": "High Temperature Detected!", "timestamp": "2024-12-13T08:00:00Z"}]
-
-          const alertsContainer = document.querySelector('.alerts-container'); // Container for alerts
-          alertsContainer.innerHTML = ''; // Clear existing alerts
-
-          const today = new Date(); // Get today's date
-          today.setHours(0, 0, 0, 0); // Reset time to midnight
-
-          // Filter alerts for today's date
-          const todayAlerts = alerts.filter(alert => {
-              const alertDate = new Date(alert.timestamp);
-              return alertDate >= today && alertDate <= new Date(today.getTime() + 24 * 60 * 60 * 1000); // Check if the alert is within today's date range
-          });
-
-          todayAlerts.forEach(alert => {
-              const alertDiv = document.createElement('div');
-              alertDiv.className = `alert alert-${alert.type} mb-2`; // Use dynamic Bootstrap classes (e.g., alert-warning, alert-info)
-              
-              // Format timestamp
-              const alertTime = new Date(alert.timestamp).toLocaleTimeString();
-
-              // Add message with timestamp
-              alertDiv.innerHTML = `<strong>${alert.message}</strong> <span class="text-muted">(${alertTime})</span>`;
-              alertsContainer.appendChild(alertDiv);
-          });
-
-          if (todayAlerts.length === 0) {
-              const noAlertsDiv = document.createElement('div');
-              noAlertsDiv.className = `alert alert-info`;
-              noAlertsDiv.textContent = 'No alerts for today.';
-              alertsContainer.appendChild(noAlertsDiv);
-          }
-      } catch (error) {
-          console.error('Error updating alerts:', error);
-      }
-  }
-
-  // Periodically update alerts
-  setInterval(updateAlerts, 5000); // Fetch and update alerts every 5 seconds
-  updateAlerts(); // Initial fetch
-
-  </script>
-  
-  <script>
-    // Define units for each label
-    const unitsMap = {
-      "Humidity": "%",
-      "Temperature": "°C",
-      "Rainfall": "mm",
-      "Moisture": "units",
-      "Ultrasonic": "cm"
-    };
-  
-    async function updateLiveData() {
-      try {
-        const response = await fetch('https://pcod.onrender.com/get-data'); // Fetch data from the API
-        const data = await response.json();
-  
-        // Group data by label
-        const groupedData = {};
-        data.forEach(item => {
-          const label = item.label; // e.g., "Humidity", "Temperature"
-          const value = item.value;
-  
-          groupedData[label] = value; // Store the latest value for each label
-        });
-  
-        // Get the live data container
-        const liveDataContainer = document.getElementById('liveDataContainer');
-        liveDataContainer.innerHTML = ''; // Clear previous content
-  
-        // Populate the container with updated data
-        Object.keys(groupedData).forEach(label => {
-          const value = groupedData[label];
-          const unit = unitsMap[label] || ""; // Get the unit for the label, default to empty string
-  
-          const p = document.createElement('p');
-          p.className = 'mb-1';
-          p.innerHTML = `<strong>${label}:</strong> <span>${value} ${unit}</span>`;
-          liveDataContainer.appendChild(p);
-        });
-      } catch (error) {
-        console.error('Error updating live data:', error);
-      }
-    }
-  
-    // Update live data periodically
-    setInterval(updateLiveData, 5000); // Fetch and update every 5 seconds
-    updateLiveData(); // Initial update
-  </script>
-  
-  <script>
-    const colorPalette = [
-        'rgba(255, 99, 132, 1)',  // Red
-        'rgba(54, 162, 235, 1)', // Blue
-        'rgba(255, 206, 86, 1)', // Yellow
-        'rgba(75, 192, 192, 1)', // Green
-        'rgba(153, 102, 255, 1)', // Purple
-        'rgba(255, 159, 64, 1)'  // Orange
-    ];
-
-    function getRandomColor() {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    // Global variable to store chart instances
-    const chartInstances = {};
-    let isFetching = false; // Prevent overlapping fetch calls
-
-    // Fetch data and dynamically create or update charts
-    async function fetchDataAndCreateOrUpdateCharts() {
-        if (isFetching) return; // Prevent overlapping fetch calls
-        isFetching = true;
-
-        try {
-            const response = await fetch('https://pcod.onrender.com/get-data');
-            const data = await response.json();
-
-            const groupedData = {};
-            data.forEach(item => {
-                const label = item.label;
-                const value = item.value;
-                const timestamp = new Date(item.timestamp).toLocaleTimeString();
-
-                if (!groupedData[label]) {
-                    groupedData[label] = { timestamps: [], values: [] };
-                }
-                groupedData[label].timestamps.push(timestamp);
-                groupedData[label].values.push(value);
-            });
-
-            const container = document.getElementById('chartsContainer');
-
-            Object.keys(groupedData).forEach((label, index) => {
-                if (!chartInstances[label]) {
-                    // Create a card for the chart
-                    const chartCard = document.createElement('div');
-                    chartCard.className = 'chart-container';
-
-                    const canvas = document.createElement('canvas');
-                    canvas.id = `chart-${label}`;
-                    chartCard.appendChild(canvas);
-                    container.appendChild(chartCard);
-
-                    const color = colorPalette[index % colorPalette.length] || getRandomColor();
-
-                    const ctx = canvas.getContext('2d');
-                    chartInstances[label] = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: groupedData[label].timestamps,
-                            datasets: [{
-                                label: `${label}`,
-                                borderColor: color,
-                                backgroundColor: color.replace('1)', '0.2)'),
-                                data: groupedData[label].values
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                x: { title: { display: true, text: 'Time' } },
-                                y: { title: { display: true, text: label } }
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw + ' visits';
                             }
                         }
-                    });
-                } else {
-                    // Reset the existing chart data
-                    const chart = chartInstances[label];
-                    chart.data.labels = []; // Clear x-axis labels
-                    chart.data.datasets[0].data = []; // Clear y-axis values
-
-                    // Add new data
-                    groupedData[label].timestamps.forEach((timestamp, i) => {
-                        chart.data.labels.push(timestamp);
-                        chart.data.datasets[0].data.push(groupedData[label].values[i]);
-                    });
-
-                    // Update chart display
-                    chart.update();
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
                 }
-            });
-        } catch (error) {
-            console.error('Error fetching or updating charts:', error);
-        } finally {
-            isFetching = false; // Reset fetch lock
-        }
-    }
+            },
+        };
 
-    // Initialize charts and set periodic updates
-    fetchDataAndCreateOrUpdateCharts();
-    setInterval(fetchDataAndCreateOrUpdateCharts, 5000);
-  </script>
+        // Render the chart
+        const trafficChart = new Chart(
+            document.getElementById('live graph'),
+            config
+        );
+    </script>
 
-  
 </body>
 </html>
